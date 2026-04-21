@@ -1,8 +1,11 @@
 import { createRoot } from "react-dom/client";
+import MeuComponente from "./test";
+import "./index.css";
 
 const App = () => {
 
-  return <h1> TESTE REACT DESKTOP</h1>
+  
+  return (<div><MeuComponente/></div>)
 
 }
 
