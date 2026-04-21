@@ -3,7 +3,7 @@
   "productName": "speech_assistant",
   "version": "1.0.0",
   "description": "Controll your computer with simple commands",
-  "main": ".vite/build/main.js",
+  "main": "src/main.js",
   "private": true,
   "scripts": {
     "start": "electron-forge start",
@@ -46,6 +46,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
+    "ps-list": "^9.0.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "shadcn": "^4.3.1",

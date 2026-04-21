@@ -2,11 +2,21 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const started = require("electron-squirrel-startup");
+const { default: psList } = require("ps-list");
 
 // Handle creating/removing shortcuts on Windows
 if (started) {
   app.quit();
 }
+
+ipcMain.handle("processo-rodando", async (_, nomeProcesso) => {
+  const processos = await psList();
+
+  return processos.some(
+    (p) =>
+      p.name.toLowerCase().includes(nomeProcesso.toLowerCase())
+  );
+});
 
 ipcMain.handle("listar-comandos", () => {
   const pasta = path.join(app.getPath("documents"), "MeusComandos");
@@ -82,11 +92,13 @@ const createWindow = () => {
     },
   });
 
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  const isDev = !app.isPackaged;
+
+  if (isDev) {
+    mainWindow.loadURL("http://localhost:5173");
   } else {
     mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
+      path.join(__dirname, "../renderer/index.html")
     );
   }
 };

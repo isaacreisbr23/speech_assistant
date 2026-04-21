@@ -6,5 +6,7 @@ contextBridge.exposeInMainWorld("api", {
     criarArquivo: (nome, comando, categoria) =>
         ipcRenderer.invoke("criar-arquivo", nome, comando, categoria),
 
-    listarComandos: () => ipcRenderer.invoke("listar-comandos")
+    listarComandos: () => ipcRenderer.invoke("listar-comandos"),
+
+    processoRodando: (nome) => ipcRenderer.invoke("processo-rodando", nome),
 });

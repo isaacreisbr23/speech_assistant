@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import StatusBadge from "./elements/statusChecker";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
@@ -27,6 +28,22 @@ export default function Home() {
     const [openLista, setOpenLista] = useState(false);
     const [comandos, setComandos] = useState<any[]>([]);
     const [categoria, setCategoria] = useState("");
+
+    const [rodando, setRodando] = useState(false);
+
+    const check = async () => {
+        const result = await window.api.processoRodando("chrome");
+        console.log(result);
+        setRodando(result);
+    };
+
+    useEffect(() => {
+        check();
+        const interval = setInterval(() => {
+            check();
+        }, 10000); // 10 segundos
+        return () => clearInterval(interval);
+    }, []);
 
     const carregarComandos = async () => {
         const lista = await window.api.listarComandos();
@@ -59,13 +76,17 @@ export default function Home() {
                     <CardContent className="p-8">
                         <h1 className="text-3xl font-bold text-white mb-6 text-center">
                             Painel de Comandos
+
                         </h1>
+                        <div className="flex items-center gap-3">
+                            <p className="text-blue-100">
+                                Gerencie e visualize seus comandos personalizados de forma rápida e intuitiva.
+                            </p>
 
-                        <p className="text-blue-100 text-center mb-8">
-                            Gerencie e visualize seus comandos personalizados de forma rápida e intuitiva.
-                        </p>
+                            <StatusBadge active={rodando} label="Ouvindo" />
+                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
                             <motion.div whileHover={{ scale: 1.05 }}>
                                 <Button
                                     className="w-full h-28 text-lg rounded-2xl bg-blue-500 hover:bg-blue-400 text-white flex flex-col items-center justify-center gap-2"
