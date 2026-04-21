@@ -3,7 +3,7 @@ export {};
 declare global {
   interface Window {
     api: {
-      criarArquivo: (nome: string) => Promise<string>;
+      criarArquivo: (nome: string, comando:string) => Promise<string>;
     };
   }
 }

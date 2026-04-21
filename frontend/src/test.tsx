@@ -1,10 +1,36 @@
-
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 export default function Home() {
+    const [open, setOpen] = useState(false);
+    const [nome, setNome] = useState("");
+    const [comando, setComando] = useState("");
+
+    const handleCriar = async () => {
+        if (!nome || !comando) {
+            alert("Preencha todos os campos");
+            return;
+        }
+
+        const caminho = await window.api.criarArquivo(nome, comando);
+        alert("Arquivo criado em: " + caminho);
+
+        setNome("");
+        setComando("");
+        setOpen(false);
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 flex items-center justify-center">
             <motion.div
@@ -25,11 +51,10 @@ export default function Home() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <motion.div whileHover={{ scale: 1.05 }}>
-                                <Button className="w-full h-28 text-lg rounded-2xl bg-blue-500 hover:bg-blue-400 text-white flex flex-col items-center justify-center gap-2"
-                                    onClick={async () => {
-                                        const caminho = await window.api.criarArquivo("meu_comando");
-                                        alert("Arquivo criado em: " + caminho);
-                                    }}>
+                                <Button
+                                    className="w-full h-28 text-lg rounded-2xl bg-blue-500 hover:bg-blue-400 text-white flex flex-col items-center justify-center gap-2"
+                                    onClick={() => setOpen(true)}
+                                >
                                     <Plus size={28} />
                                     Registrar Novo Comando
                                 </Button>
@@ -41,11 +66,41 @@ export default function Home() {
                                     Visualizar Comandos
                                 </Button>
                             </motion.div>
-
                         </div>
                     </CardContent>
                 </Card>
             </motion.div>
+
+            {/* MODAL */}
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="bg-white text-black rounded-xl">
+                    <DialogHeader>
+                        <DialogTitle>Novo Comando</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="flex flex-col gap-4 mt-4">
+                        <Input
+                            placeholder="Nome do comando"
+                            value={nome}
+                            onChange={(e) => setNome(e.target.value)}
+                        />
+                        <Input
+                            placeholder="Comando"
+                            value={comando}
+                            onChange={(e) => setComando(e.target.value)}
+                        />
+                    </div>
+
+                    <DialogFooter className="mt-6">
+                        <Button variant="ghost" onClick={() => setOpen(false)}>
+                            Cancelar
+                        </Button>
+                        <Button onClick={handleCriar}>
+                            Salvar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -8,10 +8,10 @@ if (started) {
   app.quit();
 }
 
-ipcMain.handle("criar-arquivo", async (_, nome) => {
+ipcMain.handle("criar-arquivo", async (_, nome, comando) => {
   const caminho = path.join(app.getPath("desktop"), `${nome}.txt`);
 
-  fs.writeFileSync(caminho, "Novo comando criado!");
+  fs.writeFileSync(caminho, comando);
 
   return caminho;
 });
