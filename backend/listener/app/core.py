@@ -3,11 +3,20 @@ import numpy as np
 import speech_recognition as sr
 from pathlib import Path
 import json
+import os
 
 documents = Path.home() /"Documents"/ "MeusComandos"
 
 
 class IdentificacaoArquivos:
+
+    @staticmethod
+    def executar_comando(comando, categoria):
+
+        if categoria == "abertura_arquivo":
+
+            print("[*] Iniciando comando de abertura de arquivo")
+            os.startfile(comando)
 
     @staticmethod
     def listar_comandos():
@@ -26,14 +35,16 @@ class IdentificacaoArquivos:
                     data = json.load(f)
 
                 if data.get("nome") == texto:
+
+                    IdentificacaoArquivos.executar_comando(data.get("comando"), data.get("categoria"))
+
                     return True
 
             except Exception as e:
                 print(f"Erro lendo {arquivo}: {e}")
 
         return False
-
-
+    
 class ExecucaoAcoes:
 
     @staticmethod

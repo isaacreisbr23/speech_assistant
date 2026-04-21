@@ -32,7 +32,7 @@ export default function Home() {
     const [rodando, setRodando] = useState(false);
 
     const check = async () => {
-        const result = await window.api.processoRodando("chrome");
+        const result = await window.api.processoRodando("speech_assistant_app");
         console.log(result);
         setRodando(result);
     };
