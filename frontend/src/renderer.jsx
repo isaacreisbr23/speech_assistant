@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import MeuComponente from "./test";
+import MeuComponente from "./homepage";
 import "./index.css";
 
 const App = () => {

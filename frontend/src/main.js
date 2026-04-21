@@ -29,7 +29,24 @@ ipcMain.handle("listar-comandos", () => {
       let conteudo = "";
 
       try {
-        conteudo = fs.readFileSync(caminho, "utf-8");
+        try {
+          const raw = fs.readFileSync(caminho, "utf-8");
+          const parsed = JSON.parse(raw);
+
+          return {
+            nome: parsed.nome,
+            caminho,
+            conteudo: parsed.comando,
+            categoria: parsed.categoria,
+          };
+        } catch {
+          return {
+            nome: file.replace(".txt", ""),
+            caminho,
+            conteudo: "Erro ao ler arquivo",
+            categoria: "desconhecido",
+          };
+        }
       } catch {
         conteudo = "Erro ao ler arquivo";
       }
@@ -43,10 +60,13 @@ ipcMain.handle("listar-comandos", () => {
 });
 
 
-ipcMain.handle("criar-arquivo", async (_, nome, comando) => {
+ipcMain.handle("criar-arquivo", async (_, nome, comando, categoria) => {
   const caminho = path.join(app.getPath("documents"), "MeusComandos", `${nome}.txt`);
 
-  fs.writeFileSync(caminho, comando);
+  fs.writeFileSync(
+    caminho,
+    JSON.stringify({ nome, comando, categoria }, null, 2)
+  );
 
   return caminho;
 });

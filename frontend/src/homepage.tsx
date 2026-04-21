@@ -11,6 +11,13 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 export default function Home() {
     const [open, setOpen] = useState(false);
@@ -19,6 +26,7 @@ export default function Home() {
 
     const [openLista, setOpenLista] = useState(false);
     const [comandos, setComandos] = useState<any[]>([]);
+    const [categoria, setCategoria] = useState("");
 
     const carregarComandos = async () => {
         const lista = await window.api.listarComandos();
@@ -26,12 +34,12 @@ export default function Home() {
     };
 
     const handleCriar = async () => {
-        if (!nome || !comando) {
+        if (!nome || !comando || !categoria) {
             alert("Preencha todos os campos");
             return;
         }
 
-        const caminho = await window.api.criarArquivo(nome, comando);
+        const caminho = await window.api.criarArquivo(nome, comando, categoria);
         alert("Arquivo criado em: " + caminho);
 
         setNome("");
@@ -93,16 +101,34 @@ export default function Home() {
                     </DialogHeader>
 
                     <div className="flex flex-col gap-4 mt-4">
-                        <Input
-                            placeholder="Nome do comando"
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
-                        />
-                        <Input
-                            placeholder="Comando"
-                            value={comando}
-                            onChange={(e) => setComando(e.target.value)}
-                        />
+                        <div className="flex flex-col gap-4 mt-4">
+                            <Select onValueChange={setCategoria}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Selecione a categoria" />
+                                </SelectTrigger>
+
+                                <SelectContent className="z-[9999] bg-white text-black shadow-lg border border-gray-200">
+                                    <SelectItem value="abertura_arquivo">
+                                        Abertura de arquivo
+                                    </SelectItem>
+
+                                    <SelectItem value="controle_sistema">
+                                        Controle do sistema
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <Input
+                                placeholder="Nome do comando (o mesmo que você irá falar)"
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
+                            />
+
+                            <Input
+                                placeholder="Comando"
+                                value={comando}
+                                onChange={(e) => setComando(e.target.value)}
+                            />
+                        </div>
                     </div>
 
                     <DialogFooter className="mt-6">
@@ -138,6 +164,10 @@ export default function Home() {
 
                                 <p className="text-xs text-gray-400 break-all">
                                     {cmd.caminho}
+                                </p>
+
+                                <p className="text-xs text-blue-500 font-medium">
+                                    {cmd.categoria}
                                 </p>
 
                                 <div className="mt-2 p-2 bg-black text-green-400 rounded text-sm font-mono break-all">

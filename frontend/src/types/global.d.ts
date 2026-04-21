@@ -5,7 +5,8 @@ declare global {
     nome: string;
     caminho: string;
     conteudo: string;
-  }
+    categoria: string;
+}
 
   declare global {
     interface Window {
@@ -16,7 +17,7 @@ declare global {
   }
   interface Window {
     api: {
-      criarArquivo: (nome: string, comando: string) => Promise<string>;
+      criarArquivo: (nome: string, comando: string, categoria:string) => Promise<string>;
       listarComandos: () => Promise<{ nome: string; caminho: string }[]>;
     };
   }
