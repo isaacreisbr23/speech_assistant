@@ -8,8 +8,43 @@ if (started) {
   app.quit();
 }
 
+ipcMain.handle("listar-comandos", () => {
+  const pasta = path.join(app.getPath("documents"), "MeusComandos");
+
+  // garante que a pasta existe
+  if (!fs.existsSync(pasta)) {
+    fs.mkdirSync(pasta, { recursive: true });
+    return [];
+  }
+
+  const arquivos = fs.readdirSync(pasta);
+
+  console.log("Lendo arquivos:", pasta, arquivos);
+
+  return arquivos
+    .filter(file => file.endsWith(".txt"))
+    .map(file => {
+      const caminho = path.join(pasta, file);
+
+      let conteudo = "";
+
+      try {
+        conteudo = fs.readFileSync(caminho, "utf-8");
+      } catch {
+        conteudo = "Erro ao ler arquivo";
+      }
+
+      return {
+        nome: file.replace(".txt", ""),
+        caminho,
+        conteudo,
+      };
+    });
+});
+
+
 ipcMain.handle("criar-arquivo", async (_, nome, comando) => {
-  const caminho = path.join(app.getPath("desktop"), `${nome}.txt`);
+  const caminho = path.join(app.getPath("documents"), "MeusComandos", `${nome}.txt`);
 
   fs.writeFileSync(caminho, comando);
 

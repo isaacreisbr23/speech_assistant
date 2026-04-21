@@ -17,6 +17,14 @@ export default function Home() {
     const [nome, setNome] = useState("");
     const [comando, setComando] = useState("");
 
+    const [openLista, setOpenLista] = useState(false);
+    const [comandos, setComandos] = useState<any[]>([]);
+
+    const carregarComandos = async () => {
+        const lista = await window.api.listarComandos();
+        setComandos(lista);
+    };
+
     const handleCriar = async () => {
         if (!nome || !comando) {
             alert("Preencha todos os campos");
@@ -61,7 +69,13 @@ export default function Home() {
                             </motion.div>
 
                             <motion.div whileHover={{ scale: 1.05 }}>
-                                <Button className="w-full h-28 text-lg rounded-2xl bg-blue-800 hover:bg-blue-700 text-white flex flex-col items-center justify-center gap-2">
+                                <Button
+                                    className="w-full h-28 text-lg rounded-2xl bg-blue-800 hover:bg-blue-700 text-white flex flex-col items-center justify-center gap-2"
+                                    onClick={async () => {
+                                        await carregarComandos();
+                                        setOpenLista(true);
+                                    }}
+                                >
                                     <List size={28} />
                                     Visualizar Comandos
                                 </Button>
@@ -101,6 +115,46 @@ export default function Home() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* MODAL DE LISTA DOS ARQUIVOS */}
+
+            <Dialog open={openLista} onOpenChange={setOpenLista}>
+                <DialogContent className="bg-white text-black rounded-xl max-h-[500px] overflow-auto">
+                    <DialogHeader>
+                        <DialogTitle>Comandos Salvos</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="flex flex-col gap-3 mt-4">
+                        {comandos.length === 0 ? (
+                            <p className="text-gray-500 text-center">
+                                Nenhum comando encontrado.
+                            </p>
+                        ) : comandos.map((cmd, index) => (
+                            <div
+                                key={index}
+                                className="p-3 rounded-lg border border-gray-200 bg-gray-50"
+                            >
+                                <p className="font-semibold">{cmd.nome}</p>
+
+                                <p className="text-xs text-gray-400 break-all">
+                                    {cmd.caminho}
+                                </p>
+
+                                <div className="mt-2 p-2 bg-black text-green-400 rounded text-sm font-mono break-all">
+                                    {cmd.conteudo}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <DialogFooter className="mt-4">
+                        <Button onClick={() => setOpenLista(false)}>
+                            Fechar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 }

@@ -3,5 +3,8 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("api", {
-  criarArquivo: (nome, comando) => ipcRenderer.invoke("criar-arquivo", nome, comando),
+    criarArquivo: (nome, comando) =>
+        ipcRenderer.invoke("criar-arquivo", nome, comando),
+
+    listarComandos: () => ipcRenderer.invoke("listar-comandos")
 });
