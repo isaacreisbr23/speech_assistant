@@ -32,7 +32,7 @@ ipcMain.handle("listar-comandos", () => {
   console.log("Lendo arquivos:", pasta, arquivos);
 
   return arquivos
-    .filter(file => file.endsWith(".txt"))
+    .filter(file => file.endsWith(".json"))
     .map(file => {
       const caminho = path.join(pasta, file);
 
@@ -51,7 +51,7 @@ ipcMain.handle("listar-comandos", () => {
           };
         } catch {
           return {
-            nome: file.replace(".txt", ""),
+            nome: file.replace(".json", ""),
             caminho,
             conteudo: "Erro ao ler arquivo",
             categoria: "desconhecido",
@@ -62,7 +62,7 @@ ipcMain.handle("listar-comandos", () => {
       }
 
       return {
-        nome: file.replace(".txt", ""),
+        nome: file.replace(".json", ""),
         caminho,
         conteudo,
       };
@@ -71,7 +71,7 @@ ipcMain.handle("listar-comandos", () => {
 
 
 ipcMain.handle("criar-arquivo", async (_, nome, comando, categoria) => {
-  const caminho = path.join(app.getPath("documents"), "MeusComandos", `${nome}.txt`);
+  const caminho = path.join(app.getPath("documents"), "MeusComandos", `${nome}.json`);
 
   fs.writeFileSync(
     caminho,
