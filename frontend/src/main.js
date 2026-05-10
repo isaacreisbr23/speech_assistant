@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const started = require("electron-squirrel-startup");
-const { default: psList } = require("ps-list");
+const { execSync } = require('child_process');
 
 // Handle creating/removing shortcuts on Windows
 if (started) {
@@ -10,12 +10,16 @@ if (started) {
 }
 
 ipcMain.handle("processo-rodando", async (_, nomeProcesso) => {
-  const processos = await psList();
+  try {
+    // O tasklist retorna uma string gigante com todos os processos
+    const stdout = execSync('tasklist', { encoding: 'utf8' });
 
-  return processos.some(
-    (p) =>
-      p.name.toLowerCase().includes(nomeProcesso.toLowerCase())
-  );
+    // Verificamos se o nome do processo está presente nessa string
+    return stdout.toLowerCase().includes(nomeProcesso.toLowerCase());
+  } catch (e) {
+    console.error("Erro ao verificar processos:", e);
+    return false;
+  }
 });
 
 ipcMain.handle("listar-comandos", () => {
@@ -81,25 +85,27 @@ ipcMain.handle("criar-arquivo", async (_, nome, comando, categoria) => {
   return caminho;
 });
 
+/* global MAIN_WINDOW_VITE_DEV_SERVER_URL, MAIN_WINDOW_VITE_NAME, MAIN_WINDOW_VITE_PRELOAD */
+
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      // Verifica se a constante foi injetada, caso contrário usa um fallback
+      preload: typeof MAIN_WINDOW_VITE_PRELOAD !== 'undefined'
+        ? MAIN_WINDOW_VITE_PRELOAD
+        : path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },
   });
 
-  const isDev = !app.isPackaged;
-
-  if (isDev) {
-    mainWindow.loadURL("http://localhost:5173");
+  if (typeof MAIN_WINDOW_VITE_DEV_SERVER_URL !== 'undefined') {
+    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(
-      path.join(__dirname, "../renderer/index.html")
-    );
+    // Agora apontamos para '../renderer' poque __dirname no build fica em '.vite/build'
+    mainWindow.loadFile(path.join(__dirname, '../renderer', MAIN_WINDOW_VITE_NAME, 'index.html'));
   }
 };
 
