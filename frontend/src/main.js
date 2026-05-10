@@ -111,6 +111,12 @@ ipcMain.handle("criar-arquivo", async (_, nome, comando, categoria) => {
   return caminho;
 });
 
+ipcMain.handle("deletar-arquivo", async(_, caminho) => {
+
+  return fs.unlinkSync(caminho)
+
+})
+
 ipcMain.handle("abrir-listener", async () => {
   try {
 

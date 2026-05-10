@@ -12,5 +12,7 @@ contextBridge.exposeInMainWorld("api", {
 
     abrirExeListener : () => ipcRenderer.invoke("abrir-listener"),
 
-    lerUltimoComando : () => ipcRenderer.invoke("listar-ultimo-comando")
+    lerUltimoComando : () => ipcRenderer.invoke("listar-ultimo-comando"),
+
+    deletarComando : (caminho) => ipcRenderer.invoke("deletar-arquivo", caminho)
 });

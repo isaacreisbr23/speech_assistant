@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Plus, List, GitBranch, Play } from "lucide-react";
+import { m, motion } from "framer-motion";
+import { Plus, List, GitBranch, Play, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -33,16 +33,18 @@ export default function Home() {
 
     const [ultimoComando, setUltimoComando] = useState("Nenhum comando executado");
 
+    const [isDeleting, setIsDeleting] = useState<boolean>(false)
+
     const check = async () => {
         const result = await window.api.processoRodando("speech_assistant_app");
-        console.log(result);
+
         setRodando(result);
     };
 
     const buscarUltimoComando = async () => {
 
         const ultimoComandoUtilizado = await window.api.lerUltimoComando()
-        console.log(ultimoComandoUtilizado)
+
         setUltimoComando(ultimoComandoUtilizado)
 
     }
@@ -55,9 +57,9 @@ export default function Home() {
         return () => clearInterval(interval);
     }, []);
 
-    useEffect(() =>{
+    useEffect(() => {
         buscarUltimoComando()
-    },[])
+    }, [])
 
     const carregarComandos = async () => {
         const lista = await window.api.listarComandos();
@@ -82,6 +84,17 @@ export default function Home() {
 
         await window.api.abrirExeListener()
 
+    }
+
+    const excluirComando = async (path: string) => {
+
+        
+        setIsDeleting(true)
+        console.log("DELETE", path)
+        await window.api.deletarComando(path)
+        setIsDeleting(false)
+        carregarComandos()
+  
     }
 
     return (
@@ -248,6 +261,13 @@ export default function Home() {
                                 <div className="mt-2 p-2 bg-black text-green-400 rounded text-sm font-mono break-all">
                                     {cmd.conteudo}
                                 </div>
+
+                                <div className="flex items-center">
+                                    <Button className="ml-auto" onClick={() => excluirComando(cmd.caminho)}>
+                                        <Trash className="text-red-400" />
+                                    </Button>
+                                </div>
+
                             </div>
                         ))}
                     </div>
