@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, List } from "lucide-react";
+import { Plus, List, GitBranch, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -64,6 +64,12 @@ export default function Home() {
         setOpen(false);
     };
 
+    const abrirListener = async () => {
+
+        await window.api.abrirExeListener()
+
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 flex items-center justify-center">
             <motion.div
@@ -109,8 +115,29 @@ export default function Home() {
                                     Visualizar Comandos
                                 </Button>
                             </motion.div>
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                className="mt-6"
+                            >
+                                <Button
+                                    className="w-full h-28 text-lg rounded-2xl bg-blue-700 hover:bg-blue-700 text-white flex flex-col items-center justify-center gap-2"
+                                    onClick={() => abrirListener()}
+                                >
+                                    <Play />
+                                    Começar a escutar
+                                </Button>
+                            </motion.div>
                         </div>
                     </CardContent>
+                    <a
+                        href="https://github.com/isaacreisbr23/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-white ml-10 mt-6 hover:text-blue-200 transition-colors"
+                    >
+                        <GitBranch size={18} />
+                        Conheça o desenvolvedor
+                    </a>
                 </Card>
             </motion.div>
 
@@ -162,7 +189,7 @@ export default function Home() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            <p>Repositório do github.</p>
+
             {/* MODAL DE LISTA DOS ARQUIVOS */}
 
             <Dialog open={openLista} onOpenChange={setOpenLista}>

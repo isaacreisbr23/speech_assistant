@@ -5,4 +5,5 @@ dist
 /dist
 
 main.spec
-speech_assistant_app
+speech_assistant_app.spec
+

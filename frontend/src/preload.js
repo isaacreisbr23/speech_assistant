@@ -9,4 +9,6 @@ contextBridge.exposeInMainWorld("api", {
     listarComandos: () => ipcRenderer.invoke("listar-comandos"),
 
     processoRodando: (nome) => ipcRenderer.invoke("processo-rodando", nome),
+
+    abrirExeListener : () => ipcRenderer.invoke("abrir-listener")
 });

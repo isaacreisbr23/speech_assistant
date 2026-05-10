@@ -2,7 +2,8 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const started = require("electron-squirrel-startup");
-const { execSync } = require('child_process');
+
+const { execSync, spawn } = require('child_process');
 
 // Handle creating/removing shortcuts on Windows
 if (started) {
@@ -85,6 +86,30 @@ ipcMain.handle("criar-arquivo", async (_, nome, comando, categoria) => {
   return caminho;
 });
 
+ipcMain.handle("abrir-listener", async () => {
+  try {
+
+   
+    const exePath = path.join(__dirname, "speech_assistant_app.exe");
+
+    spawn(exePath, [], {
+      detached: true,
+      stdio: "ignore"
+    }).unref();
+
+    return {
+      success: true
+    };
+
+  } catch (e) {
+    console.error("Erro ao abrir listener:", e);
+
+    return {
+      success: false,
+      error: e.message
+    };
+  }
+});
 /* global MAIN_WINDOW_VITE_DEV_SERVER_URL, MAIN_WINDOW_VITE_NAME, MAIN_WINDOW_VITE_PRELOAD */
 
 const createWindow = () => {

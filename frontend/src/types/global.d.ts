@@ -20,6 +20,7 @@ declare global {
       criarArquivo: (nome: string, comando: string, categoria:string) => Promise<string>;
       listarComandos: () => Promise<{ nome: string; caminho: string }[]>;
       processoRodando: (nomeProcesso:string) => Promise<boolean>;
+      abrirExeListener : () => {};
     };
   }
 }
