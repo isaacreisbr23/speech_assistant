@@ -55,7 +55,7 @@ class IdentificacaoArquivos:
                 with open(arquivo, "r", encoding="utf-8") as f:
                     data = json.load(f)
 
-                if data.get("nome") == texto:
+                if data.get("nome").lower() == texto:
 
                     IdentificacaoArquivos.executar_comando(data.get("comando"), data.get("categoria"))
 
@@ -96,7 +96,7 @@ def start_listener_app():
     audio_data = sr.AudioData(audio.tobytes(), fs, 2)
 
     try:
-        text = r.recognize_google(audio_data, language="pt-BR")
+        text = r.recognize_google(audio_data, language="pt-BR").lower()
         print("Você disse:", text)
 
         ExecucaoAcoes.checar_texto_presente_nos_comandos(text, comandos_encontrados)
