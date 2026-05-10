@@ -21,6 +21,7 @@ declare global {
       listarComandos: () => Promise<{ nome: string; caminho: string }[]>;
       processoRodando: (nomeProcesso:string) => Promise<boolean>;
       abrirExeListener : () => {};
+      lerUltimoComando : () => Promise<string>
     };
   }
 }

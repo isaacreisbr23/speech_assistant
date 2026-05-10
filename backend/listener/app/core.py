@@ -4,11 +4,27 @@ import speech_recognition as sr
 from pathlib import Path
 import json
 import os
+import keyboard
+
 
 documents = Path.home() /"Documents"/ "MeusComandos"
 
 
 class IdentificacaoArquivos:
+
+    @staticmethod
+    def criar_log_ultimo_comando_executado(comando):
+        
+        pasta = Path.home() / "Documents" / "MeusComandos"
+        pasta.mkdir(parents=True, exist_ok=True)
+
+        caminho_arquivo = pasta / "ultimo_comando.txt"
+
+        with open(caminho_arquivo, "w", encoding="utf-8") as arquivo:
+            arquivo.write(comando)
+
+        return caminho_arquivo
+
 
     @staticmethod
     def executar_comando(comando, categoria):
@@ -17,6 +33,11 @@ class IdentificacaoArquivos:
 
             print("[*] Iniciando comando de abertura de arquivo")
             os.startfile(comando)
+            
+        if categoria == "controle_sistema":
+
+            print("[*] Iniciando processo de controle do sistema")
+            keyboard.press_and_release(comando)
 
     @staticmethod
     def listar_comandos():
@@ -79,6 +100,7 @@ def start_listener_app():
         print("Você disse:", text)
 
         ExecucaoAcoes.checar_texto_presente_nos_comandos(text, comandos_encontrados)
+        IdentificacaoArquivos.criar_log_ultimo_comando_executado(text)
 
     except Exception as e:
         print("Erro:", e)

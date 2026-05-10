@@ -31,19 +31,33 @@ export default function Home() {
 
     const [rodando, setRodando] = useState(false);
 
+    const [ultimoComando, setUltimoComando] = useState("Nenhum comando executado");
+
     const check = async () => {
         const result = await window.api.processoRodando("speech_assistant_app");
         console.log(result);
         setRodando(result);
     };
 
+    const buscarUltimoComando = async () => {
+
+        const ultimoComandoUtilizado = await window.api.lerUltimoComando()
+        console.log(ultimoComandoUtilizado)
+        setUltimoComando(ultimoComandoUtilizado)
+
+    }
+
     useEffect(() => {
         check();
         const interval = setInterval(() => {
             check();
-        }, 10000); // 10 segundos
+        }, 10000);
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() =>{
+        buscarUltimoComando()
+    },[])
 
     const carregarComandos = async () => {
         const lista = await window.api.listarComandos();
@@ -126,6 +140,19 @@ export default function Home() {
                                     <Play />
                                     Começar a escutar
                                 </Button>
+                            </motion.div>
+                            <motion.div whileHover={{ scale: 1.03 }} className="mt-6">
+                                <Card className="w-full h-28 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-xl text-white ">
+                                    <CardContent className="h-full flex flex-col justify-center">
+                                        <span className="text-sm text-blue-200">
+                                            Último comando utilizado
+                                        </span>
+
+                                        <p className="text-lg font-bold truncate mt-2">
+                                            {ultimoComando}
+                                        </p>
+                                    </CardContent>
+                                </Card>
                             </motion.div>
                         </div>
                     </CardContent>

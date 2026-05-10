@@ -23,6 +23,31 @@ ipcMain.handle("processo-rodando", async (_, nomeProcesso) => {
   }
 });
 
+ipcMain.handle("listar-ultimo-comando", () => {
+  
+  try {
+
+    const caminho = path.join(
+      app.getPath("documents"),
+      "MeusComandos",
+      "ultimo_comando.txt"
+    );
+
+    if (!fs.existsSync(caminho)) {
+      return null;
+    }
+
+    const conteudo = fs.readFileSync(caminho, "utf-8");
+
+    return conteudo.trim();
+
+  } catch (e) {
+    console.error("Erro ao ler último comando:", e);
+    return null;
+  }
+
+})
+
 ipcMain.handle("listar-comandos", () => {
   const pasta = path.join(app.getPath("documents"), "MeusComandos");
 
@@ -89,7 +114,7 @@ ipcMain.handle("criar-arquivo", async (_, nome, comando, categoria) => {
 ipcMain.handle("abrir-listener", async () => {
   try {
 
-   
+
     const exePath = path.join(__dirname, "speech_assistant_app.exe");
 
     spawn(exePath, [], {
