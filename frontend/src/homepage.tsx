@@ -162,7 +162,7 @@ export default function Home() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-
+            <p>Repositório do github.</p>
             {/* MODAL DE LISTA DOS ARQUIVOS */}
 
             <Dialog open={openLista} onOpenChange={setOpenLista}>
