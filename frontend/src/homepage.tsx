@@ -33,6 +33,9 @@ export default function Home() {
 
     const [ultimoComando, setUltimoComando] = useState("Nenhum comando executado");
 
+    const [horario, setHorario] = useState<string>("23:59");
+    const [subCategoria, setSubCategoria] = useState("");
+
     const [isDeleting, setIsDeleting] = useState<boolean>(false)
 
     const check = async () => {
@@ -48,6 +51,7 @@ export default function Home() {
         setUltimoComando(ultimoComandoUtilizado)
 
     }
+
 
     useEffect(() => {
         check();
@@ -72,12 +76,27 @@ export default function Home() {
             return;
         }
 
-        const caminho = await window.api.criarArquivo(nome, comando, categoria);
-        alert("Arquivo criado em: " + caminho);
+        if (categoria != 'rotina_diaria') {
+            const caminho = await window.api.criarArquivo(nome, comando, categoria);
+            alert("Arquivo criado em: " + caminho);
 
-        setNome("");
-        setComando("");
-        setOpen(false);
+            setNome("");
+            setComando("");
+            setOpen(false);
+        }
+
+        if (categoria == "rotina_diaria") {
+
+            const caminho = await window.api.criarArquivoPeriodico(nome, comando, categoria, horario, subCategoria);
+            alert("Arquivo criado em: " + caminho);
+
+            setCategoria("")
+            setNome("");
+            setComando("");
+            setHorario("23:59")
+            setOpen(false);
+
+        }
     };
 
     const abrirListener = async () => {
@@ -88,13 +107,13 @@ export default function Home() {
 
     const excluirComando = async (path: string) => {
 
-        
+
         setIsDeleting(true)
         console.log("DELETE", path)
         await window.api.deletarComando(path)
         setIsDeleting(false)
         carregarComandos()
-  
+
     }
 
     return (
@@ -200,9 +219,16 @@ export default function Home() {
                                         Abertura de arquivo
                                     </SelectItem>
 
+                                    <SelectItem value="rotina_diaria">
+                                        Rotina diária
+                                    </SelectItem>
+
+
                                     <SelectItem value="controle_sistema">
                                         Controle do sistema
                                     </SelectItem>
+
+
                                 </SelectContent>
                             </Select>
                             <Input
@@ -211,11 +237,40 @@ export default function Home() {
                                 onChange={(e) => setNome(e.target.value)}
                             />
 
+                            {categoria == "rotina_diaria" && (
+                                <Select onValueChange={setSubCategoria}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecione a categoria" />
+                                    </SelectTrigger>
+
+                                    <SelectContent className="z-[9999] bg-white text-black shadow-lg border border-gray-200">
+                                        <SelectItem value="abertura_arquivo">
+                                            Abertura de arquivo
+                                        </SelectItem>
+
+                                        <SelectItem value="controle_sistema">
+                                            Controle do sistema
+                                        </SelectItem>
+
+
+                                    </SelectContent>
+                                </Select>
+                            )}
+
                             <Input
                                 placeholder="Comando"
                                 value={comando}
                                 onChange={(e) => setComando(e.target.value)}
                             />
+                            
+                            {categoria == "rotina_diaria" && (
+                                <Input
+                                    placeholder="Horário de execução (diário)"
+                                    value={horario}
+                                    onChange={(e) => setHorario(e.target.value)}
+                                />
+                            )}
+                            
                         </div>
                     </div>
 
@@ -256,6 +311,10 @@ export default function Home() {
 
                                 <p className="text-xs text-blue-500 font-medium">
                                     {cmd.categoria}
+                                </p>
+
+                                <p className="text-xs text-blue-500 font-medium">
+                                    {cmd.horario}
                                 </p>
 
                                 <div className="mt-2 p-2 bg-black text-green-400 rounded text-sm font-mono break-all">

@@ -24,7 +24,7 @@ ipcMain.handle("processo-rodando", async (_, nomeProcesso) => {
 });
 
 ipcMain.handle("listar-ultimo-comando", () => {
-  
+
   try {
 
     const caminho = path.join(
@@ -49,37 +49,44 @@ ipcMain.handle("listar-ultimo-comando", () => {
 })
 
 ipcMain.handle("listar-comandos", () => {
-  const pasta = path.join(app.getPath("documents"), "MeusComandos");
+  const pastaPrincipal = path.join(
+    app.getPath("documents"),
+    "MeusComandos"
+  );
 
-  // garante que a pasta existe
-  if (!fs.existsSync(pasta)) {
-    fs.mkdirSync(pasta, { recursive: true });
-    return [];
+  const pastaRotinas = path.join(pastaPrincipal, "rotinas");
+
+  if (!fs.existsSync(pastaPrincipal)) {
+    fs.mkdirSync(pastaPrincipal, { recursive: true });
   }
 
-  const arquivos = fs.readdirSync(pasta);
+  if (!fs.existsSync(pastaRotinas)) {
+    fs.mkdirSync(pastaRotinas, { recursive: true });
+  }
 
-  console.log("Lendo arquivos:", pasta, arquivos);
+  const lerArquivosJson = (diretorio) => {
+    const arquivos = fs.readdirSync(diretorio);
 
-  return arquivos
-    .filter(file => file.endsWith(".json"))
-    .map(file => {
-      const caminho = path.join(pasta, file);
+    return arquivos
+      .filter((file) => file.endsWith(".json"))
+      .map((file) => {
+        const caminho = path.join(diretorio, file);
 
-      let conteudo = "";
-
-      try {
         try {
           const raw = fs.readFileSync(caminho, "utf-8");
           const parsed = JSON.parse(raw);
 
           return {
-            nome: parsed.nome,
+            nome: parsed.nome || file.replace(".json", ""),
             caminho,
-            conteudo: parsed.comando,
-            categoria: parsed.categoria,
+            conteudo: parsed.comando || "Sem conteúdo",
+            categoria: parsed.categoria || "desconhecido",
+            horario: parsed.horario || null,
+            subcategoria: parsed.subcategoria || null,
           };
-        } catch {
+        } catch (e) {
+          console.error("Erro ao ler arquivo:", caminho, e);
+
           return {
             nome: file.replace(".json", ""),
             caminho,
@@ -87,18 +94,15 @@ ipcMain.handle("listar-comandos", () => {
             categoria: "desconhecido",
           };
         }
-      } catch {
-        conteudo = "Erro ao ler arquivo";
-      }
+      });
+  };
 
-      return {
-        nome: file.replace(".json", ""),
-        caminho,
-        conteudo,
-      };
-    });
+
+  const comandosPrincipais = lerArquivosJson(pastaPrincipal);
+  const comandosRotinas = lerArquivosJson(pastaRotinas);
+
+  return [...comandosPrincipais, ...comandosRotinas];
 });
-
 
 ipcMain.handle("criar-arquivo", async (_, nome, comando, categoria) => {
   const caminho = path.join(app.getPath("documents"), "MeusComandos", `${nome}.json`);
@@ -111,7 +115,20 @@ ipcMain.handle("criar-arquivo", async (_, nome, comando, categoria) => {
   return caminho;
 });
 
-ipcMain.handle("deletar-arquivo", async(_, caminho) => {
+ipcMain.handle("criar-arquivo-periodico", async (_, nome, comando, categoria, horario, subcategoria) => {
+
+  const caminho = path.join(app.getPath("documents"), "MeusComandos", "rotinas", `${nome}.json`);
+
+  fs.writeFileSync(
+    caminho,
+    JSON.stringify({ nome, comando, categoria, horario, subcategoria }, null, 2)
+  );
+
+  return caminho;
+
+});
+
+ipcMain.handle("deletar-arquivo", async (_, caminho) => {
 
   return fs.unlinkSync(caminho)
 
@@ -146,9 +163,8 @@ ipcMain.handle("abrir-listener", async () => {
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 700,
     webPreferences: {
-      // Verifica se a constante foi injetada, caso contrário usa um fallback
       preload: typeof MAIN_WINDOW_VITE_PRELOAD !== 'undefined'
         ? MAIN_WINDOW_VITE_PRELOAD
         : path.join(__dirname, 'preload.js'),

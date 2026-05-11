@@ -23,6 +23,7 @@ declare global {
       abrirExeListener : () => {};
       lerUltimoComando : () => Promise<string>;
       deletarComando : (caminho:string) => {}
+      criarArquivoPeriodico : (nome: string, comando: string, categoria:string, horario:string, subcategoria:string) => Promise<string>;
     };
   }
 }

@@ -3,8 +3,7 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("api", {
-    criarArquivo: (nome, comando, categoria) =>
-        ipcRenderer.invoke("criar-arquivo", nome, comando, categoria),
+    criarArquivo: (nome, comando, categoria) => ipcRenderer.invoke("criar-arquivo", nome, comando, categoria),
 
     listarComandos: () => ipcRenderer.invoke("listar-comandos"),
 
@@ -14,5 +13,7 @@ contextBridge.exposeInMainWorld("api", {
 
     lerUltimoComando : () => ipcRenderer.invoke("listar-ultimo-comando"),
 
-    deletarComando : (caminho) => ipcRenderer.invoke("deletar-arquivo", caminho)
+    deletarComando : (caminho) => ipcRenderer.invoke("deletar-arquivo", caminho),
+
+    criarArquivoPeriodico : (nome, comando, categoria, horario, subcategoria) => ipcRenderer.invoke("criar-arquivo-periodico", nome, comando, categoria, horario, subcategoria)
 });
