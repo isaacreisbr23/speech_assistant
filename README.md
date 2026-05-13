@@ -9,6 +9,7 @@ You may not:
 - modify and republish
 - use commercially
 without explicit permission from the author.
+Any use beyond simple viewing and study without the author's explicit authorization will result in appropriate legal action.
 
 Copyright (c) 2026 Isaac Gabriel
 
@@ -23,6 +24,6 @@ utilizar este projeto comercialmente;
 criar projetos derivados com base neste código;
 remover créditos ou autoria do projeto.
 
-Qualquer uso além da simples visualização e estudo requer autorização explícita do autor.
+Qualquer uso além da simples visualização e estudo sem autorização explícita do autor implicará nas cabíveis medidas legais.
 
 Todos os direitos reservados.
