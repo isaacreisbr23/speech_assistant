@@ -1,4 +1,4 @@
-Copyright (c) 2026 Isaac Gabriel A. dos Reis
+Copyright (c) 2026-xxxx Isaac Gabriel A. dos Reis
 
 Permission is granted to view this source code for educational
 and reference purposes only.
@@ -11,7 +11,7 @@ You may not:
 without explicit permission from the author.
 Any use beyond simple viewing and study without the author's explicit authorization will result in appropriate legal action.
 
-Copyright (c) 2026 Isaac Gabriel
+Copyright (c) 2026-xxxx Isaac Gabriel A. dos Reis
 
 Este código-fonte é disponibilizado apenas para fins educacionais, de estudo e referência.
 
