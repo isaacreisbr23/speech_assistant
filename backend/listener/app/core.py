@@ -7,7 +7,6 @@ import os
 import keyboard
 import time
 from datetime import datetime
-from plyer import notification
 import pyttsx3
 import random
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { m, motion } from "framer-motion";
-import { Plus, List, GitBranch, Play, Trash } from "lucide-react";
+import { Plus, List, GitBranch, Play, Trash, FileQuestionMark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -161,7 +161,7 @@ export default function Home() {
                                     Visualizar Comandos
                                 </Button>
                             </motion.div>
-                            <motion.div
+                            {/*<motion.div
                                 whileHover={{ scale: 1.05 }}
                                 className="mt-6"
                             >
@@ -172,7 +172,7 @@ export default function Home() {
                                     <Play />
                                     Começar a escutar
                                 </Button>
-                            </motion.div>
+                            </motion.div>*/}
                             <motion.div whileHover={{ scale: 1.03 }} className="mt-6">
                                 <Card className="w-full h-28 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-xl text-white ">
                                     <CardContent className="h-full flex flex-col justify-center">
@@ -188,15 +188,27 @@ export default function Home() {
                             </motion.div>
                         </div>
                     </CardContent>
-                    <a
-                        href="https://github.com/isaacreisbr23/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-white ml-10 mt-6 hover:text-blue-200 transition-colors"
-                    >
-                        <GitBranch size={18} />
-                        Conheça o desenvolvedor
-                    </a>
+                    <div className="flex items-center gap-6 ml-10 mt-6">
+                        <a
+                            href="https://github.com/isaacreisbr23/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-white hover:text-blue-200 transition-colors"
+                        >
+                            <GitBranch size={18} />
+                            Conheça o desenvolvedor
+                        </a>
+
+                        <a
+                            href="https://github.com/isaacreisbr23/speech_assistant"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-white hover:text-blue-200 transition-colors"
+                        >
+                            <FileQuestionMark size={18} />
+                            Ajuda e Documentação
+                        </a>
+                    </div>
                 </Card>
             </motion.div>
 
@@ -216,7 +228,7 @@ export default function Home() {
 
                                 <SelectContent className="z-[9999] bg-white text-black shadow-lg border border-gray-200">
                                     <SelectItem value="abertura_arquivo">
-                                        Abertura de arquivo
+                                        Abertura de arquivo ou url
                                     </SelectItem>
 
                                     <SelectItem value="rotina_diaria">
@@ -225,17 +237,19 @@ export default function Home() {
 
 
                                     <SelectItem value="controle_sistema">
-                                        Controle do sistema
+                                        Controle do sistema (consulte a documentação em caso de dúvidas)
                                     </SelectItem>
 
 
                                 </SelectContent>
                             </Select>
-                            <Input
-                                placeholder="Nome do comando (o mesmo que você irá falar)"
-                                value={nome}
-                                onChange={(e) => setNome(e.target.value)}
-                            />
+                            {categoria != "rotina_diaria" && (
+                                <Input
+                                    placeholder="Nome do comando (o mesmo que você irá falar)"
+                                    value={nome}
+                                    onChange={(e) => setNome(e.target.value)}
+                                />
+                            )}
 
                             {categoria == "rotina_diaria" && (
                                 <Select onValueChange={setSubCategoria}>
@@ -262,7 +276,7 @@ export default function Home() {
                                 value={comando}
                                 onChange={(e) => setComando(e.target.value)}
                             />
-                            
+
                             {categoria == "rotina_diaria" && (
                                 <Input
                                     placeholder="Horário de execução (diário)"
@@ -270,7 +284,7 @@ export default function Home() {
                                     onChange={(e) => setHorario(e.target.value)}
                                 />
                             )}
-                            
+
                         </div>
                     </div>
 
