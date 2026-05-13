@@ -9,3 +9,20 @@ You may not:
 - modify and republish
 - use commercially
 without explicit permission from the author.
+
+Copyright (c) 2026 Isaac Gabriel
+
+Este código-fonte é disponibilizado apenas para fins educacionais, de estudo e referência.
+
+É permitido visualizar o conteúdo deste repositório, porém NÃO é permitido:
+
+copiar partes substanciais do código;
+redistribuir este projeto;
+modificar e republicar este código;
+utilizar este projeto comercialmente;
+criar projetos derivados com base neste código;
+remover créditos ou autoria do projeto.
+
+Qualquer uso além da simples visualização e estudo requer autorização explícita do autor.
+
+Todos os direitos reservados.
