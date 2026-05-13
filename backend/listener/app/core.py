@@ -176,12 +176,15 @@ class ExecucaoAcoes:
 
         if IdentificacaoArquivos.check_comando_nos_arquivos(text, comandos):
             print(f"[*] Comando identificado '{text}' iniciando execução")
-            notification.notify(
-                title='Comando executado',
-                message=f'O comando {text} foi executado com sucesso',
-                app_icon=None,  # e.g. 'path/to/icon.ico' (Windows) or '.png' (Linux)
-                timeout=5,      # Seconds the notification stays on screen
-            )
+
+            fala_number = random.randrange(1,3)
+            if fala_number == 1:
+                    falar(f"Comando {text} executado")
+            elif fala_number == 2:
+                    falar("Comando concluído")
+            elif fala_number == 3:
+                    falar(f"{text} executado")
+            
         else:
             print("[*] Nenhum comando encontrado")
 
