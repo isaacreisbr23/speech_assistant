@@ -1,3 +1,8 @@
+Releases: 
+  1.0 - https://drive.google.com/file/d/1aDeODrlzYuHVmDjqpgjiHByc2waAcSDU/view?usp=sharing
+
+
+
 Copyright (c) 2026-xxxx Isaac Gabriel A. dos Reis
 
 Permission is granted to view this source code for educational
