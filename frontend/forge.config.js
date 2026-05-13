@@ -4,6 +4,9 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    extraResource: [
+      "../backend/listener/app/dist/speech_assistant_app.exe"
+    ]
   },
   rebuildConfig: {},
   makers: [
@@ -58,4 +61,5 @@ module.exports = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
+  
 };

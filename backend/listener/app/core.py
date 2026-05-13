@@ -7,7 +7,9 @@ import os
 import keyboard
 import time
 from datetime import datetime
-
+from plyer import notification
+import pyttsx3
+import random
 
 documents = Path.home() /"Documents"/ "MeusComandos"
 
@@ -170,11 +172,35 @@ class ExecucaoAcoes:
     @staticmethod
     def checar_texto_presente_nos_comandos(text, comandos):
 
+        
+
         if IdentificacaoArquivos.check_comando_nos_arquivos(text, comandos):
             print(f"[*] Comando identificado '{text}' iniciando execução")
+            notification.notify(
+                title='Comando executado',
+                message=f'O comando {text} foi executado com sucesso',
+                app_icon=None,  # e.g. 'path/to/icon.ico' (Windows) or '.png' (Linux)
+                timeout=5,      # Seconds the notification stays on screen
+            )
         else:
             print("[*] Nenhum comando encontrado")
 
+
+def falar(texto):
+
+    engine = pyttsx3.init(driverName='sapi5')
+
+    engine.setProperty('rate', 250)
+
+    voices = engine.getProperty('voices')
+
+    engine.setProperty('voice', voices[0].id)
+
+    engine.say(texto)
+
+    engine.runAndWait()
+
+    del engine
 
 def rotina_60_segundos():
     while True:
@@ -190,29 +216,104 @@ def rotina_60_segundos():
 
 def start_listener_app():
 
-    fs = 16000
-    seconds = 5
+    fs = 44100
+
+    wake_word = "aura"
+
+    r = sr.Recognizer()
 
     while True:
-        comandos_encontrados = IdentificacaoArquivos.listar_comandos()
-        print(f"Comandos encontrados: {[c.name for c in comandos_encontrados]}")
 
-        print("Ouvindo...")
+        print("Aguardando wake word...")
 
-        audio = sd.rec(int(seconds * fs), samplerate=fs, channels=1, dtype='int16')
+        audio = sd.rec(
+            int(2 * fs),
+            samplerate=fs,
+            channels=1,
+            dtype='int16'
+        )
+
         sd.wait()
 
         audio = np.squeeze(audio)
 
-        r = sr.Recognizer()
-        audio_data = sr.AudioData(audio.tobytes(), fs, 2)
+        audio_data = sr.AudioData(
+            audio.tobytes(),
+            fs,
+            2
+        )
 
         try:
-            text = r.recognize_google(audio_data, language="pt-BR").lower()
-            print("Você disse:", text)
 
-            ExecucaoAcoes.checar_texto_presente_nos_comandos(text, comandos_encontrados)
-            IdentificacaoArquivos.criar_log_ultimo_comando_executado(text)
+            text = r.recognize_google(
+                audio_data,
+                language="pt-BR"
+            ).lower()
+
+            print("Ouvido:", text)
+
+            if wake_word in text:
+
+                print("Aura ativada")
+
+                
+
+                print("Ouvindo comando...")
+
+                audio_cmd = sd.rec(
+                    int(3 * fs),
+                    samplerate=fs,
+                    channels=1,
+                    dtype='int16'
+                )
+
+                fala_number = random.randrange(1,6)
+
+                if fala_number == 1:
+                    falar("Olá, posso ajudar?")
+                elif fala_number == 2:
+                    falar("Como posso ser útil?")
+                elif fala_number == 3:
+                    falar("Estou ouvindo")
+                elif fala_number == 4:
+                    falar("Pronta")
+                elif fala_number == 5:
+                    falar("Chamou?")
+                elif fala_number == 6:
+                    falar("Também me canso, sabia?")
+
+                sd.wait()
+
+                audio_cmd = np.squeeze(audio_cmd)
+
+                audio_cmd_data = sr.AudioData(
+                    audio_cmd.tobytes(),
+                    fs,
+                    2
+                )
+
+                comando = r.recognize_google(
+                    audio_cmd_data,
+                    language="pt-BR"
+                ).lower()
+
+                print("Comando:", comando)
+
+                comandos_encontrados = (
+                    IdentificacaoArquivos.listar_comandos()
+                )
+
+                
+
+                ExecucaoAcoes.checar_texto_presente_nos_comandos(
+                    comando,
+                    comandos_encontrados
+                )
+
+                IdentificacaoArquivos.criar_log_ultimo_comando_executado(
+                    comando
+                )
 
         except Exception as e:
+
             print("Erro:", e)

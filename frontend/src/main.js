@@ -138,8 +138,12 @@ ipcMain.handle("abrir-listener", async () => {
   try {
 
 
-    const exePath = path.join(__dirname, "speech_assistant_app.exe");
-
+    let exePath;
+    if (app.isPackaged) {
+      exePath = path.join(process.resourcesPath, "speech_assistant_app.exe");
+    } else {
+      exePath = path.join(app.getAppPath(), "../backend/listener/app/dist/speech_assistant_app.exe");
+    }
     spawn(exePath, [], {
       detached: true,
       stdio: "ignore"
