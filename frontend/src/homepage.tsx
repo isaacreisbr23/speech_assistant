@@ -71,7 +71,7 @@ export default function Home() {
     };
 
     const handleCriar = async () => {
-        if (!nome || !comando || !categoria) {
+        if ((!nome || !comando || !categoria) && categoria != "rotina_diaria") {
             alert("Preencha todos os campos");
             return;
         }
@@ -82,7 +82,11 @@ export default function Home() {
 
             setNome("");
             setComando("");
+            setCategoria("");
+            setHorario("");
             setOpen(false);
+
+            window.location.reload()
         }
 
         if (categoria == "rotina_diaria") {
@@ -95,6 +99,8 @@ export default function Home() {
             setComando("");
             setHorario("23:59")
             setOpen(false);
+
+            window.location.reload()
 
         }
     };
@@ -127,7 +133,7 @@ export default function Home() {
                 <Card className="rounded-2xl shadow-2xl bg-white/10 backdrop-blur-xl border border-white/20">
                     <CardContent className="p-8">
                         <h1 className="text-3xl font-bold text-white mb-6 text-center">
-                            Painel de Comandos
+                            Painel de Comandos AURA
 
                         </h1>
                         <div className="flex items-center gap-3">

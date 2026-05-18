@@ -7,3 +7,5 @@ dist
 main.spec
 speech_assistant_app.spec
 
+releases/
+*.rar
