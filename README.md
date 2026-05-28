@@ -1,4 +1,5 @@
 Releases: 
+  1.0.1 (Bug Fix) - https://drive.google.com/file/d/1jlC0KGly0Xn6s6DPAe6zGLrSVuVLTLrl/view?usp=sharing
   1.0 - https://drive.google.com/file/d/1aDeODrlzYuHVmDjqpgjiHByc2waAcSDU/view?usp=sharing
 
 
