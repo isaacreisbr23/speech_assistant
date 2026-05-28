@@ -23,8 +23,7 @@ Com ele você pode controlar funções do sistema, abrir URLs, criar rotinas aut
 
 ### Alterações
 - Correções gerais de estabilidade
-- Melhorias no reconhecimento de comandos
-- Ajustes internos de performance
+- Fix na criação de rotinas
 
 ### Download
 https://drive.google.com/file/d/1jlC0KGly0Xn6s6DPAe6zGLrSVuVLTLrl/view?usp=sharing
