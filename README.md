@@ -57,7 +57,7 @@ Esse executável é responsável pelo reconhecimento e processamento dos comando
 
 ---
 
-# 🎛️ Comandos suportados
+# 🎛️ Comandos suportados pela aba (Controle do sistema)
 
 ## 🔊 Controle de Volume
 
